@@ -1,5 +1,6 @@
 import { ICommand } from "../commands";
 import { SlashCommandBuilder } from "discord.js";
+import { db } from "../firebase";
 
 // command to add points
 interface ISubmission {
@@ -48,7 +49,7 @@ const submitCommand: ICommand = {
           })
         )
     ),
-  execute: (interaction) => {
+  execute: async (interaction) => {
     interaction.options.getString("category");
     // obtain the number of points for the category
     const submissionType = submissionDirectory.find(
@@ -62,7 +63,43 @@ const submitCommand: ICommand = {
       );
       return;
     } else {
-      interaction.reply(
+      // figure out who the user is
+      const user = interaction.user;
+
+      // TODO: add a streak feature
+      // get the current time
+      const currentTime = new Date();
+
+      // if you submit within 24 hours of your last submission, you get an additional streak bonus
+      // formula: points bonus = (daily_streak * 0.1 * points)
+
+      // figure out if this is a new user
+      await db
+        .collection("leet_leaderboard")
+        .doc(user.id)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            // if the user exists, add the points
+            const userDoc = doc.data();
+            const userPoints = userDoc?.points;
+            db.collection("leet_leaderboard")
+              .doc(user.id)
+              .update({
+                points: userPoints + submissionType.points,
+              });
+          } else {
+            // if the user doesn't exist, create the user
+            db.collection("leet_leaderboard").doc(user.id).set({
+              points: submissionType.points,
+              username: user.username,
+              display_name: user.displayName,
+            });
+          }
+        });
+
+      // reply with a confirmation
+      await interaction.reply(
         `**${interaction.options.getString("category")}** finished! **${
           submissionType.points
         } points have been added.**`
