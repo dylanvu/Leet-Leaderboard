@@ -110,7 +110,7 @@ const submitCommand: ICommand = {
       await interaction.reply(
         `**${interaction.options.getString(
           "category"
-        )}** finished! **${additionalPoints} ${
+        )}** finished! **${additionalPoints.toFixed(2)} ${
           additionalPoints === 1 ? "point" : "points"
         } have been added.**`
       );
