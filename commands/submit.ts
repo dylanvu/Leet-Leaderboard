@@ -99,10 +99,13 @@ const submitCommand: ICommand = {
         });
 
       // reply with a confirmation
+      const points = submissionType.points;
       await interaction.reply(
-        `**${interaction.options.getString("category")}** finished! **${
-          submissionType.points
-        } points have been added.**`
+        `**${interaction.options.getString(
+          "category"
+        )}** finished! **${points} ${
+          points === 1 ? "point" : "points"
+        } have been added.**`
       );
     }
   },
