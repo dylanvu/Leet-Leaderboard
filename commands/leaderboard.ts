@@ -29,22 +29,26 @@ const leaderboardCommand: ICommand = {
       .setColor(0x0099ff)
       .setTitle("Top Leaderboard");
 
-    // iterate through the leaderboard and index, add the user to the embed
-    leaderboard.map((user, index) => {
-      const userEntry: APIEmbedField = {
-        name: user.display_name,
-        value: `${user.points.toString()} points`,
-      };
-      leaderboardEmbed.addFields(userEntry);
-      if (
-        index === 0 &&
-        user.avatar_url &&
-        user.avatar_url !== "none" &&
-        user.avatar_url.length > 0
-      ) {
-        leaderboardEmbed.setThumbnail(user.avatar_url);
-      }
-    });
+    if (leaderboard.length === 0) {
+      leaderboardEmbed.setDescription("No users in the leaderboard yet.");
+    } else {
+      // iterate through the leaderboard and index, add the user to the embed
+      leaderboard.map((user, index) => {
+        const userEntry: APIEmbedField = {
+          name: user.display_name,
+          value: `${user.points.toString()} points`,
+        };
+        leaderboardEmbed.addFields(userEntry);
+        if (
+          index === 0 &&
+          user.avatar_url &&
+          user.avatar_url !== "none" &&
+          user.avatar_url.length > 0
+        ) {
+          leaderboardEmbed.setThumbnail(user.avatar_url);
+        }
+      });
+    }
 
     // reply
     await interaction.reply({ embeds: [leaderboardEmbed] });
