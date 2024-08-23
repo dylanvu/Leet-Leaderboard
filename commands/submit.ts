@@ -91,6 +91,7 @@ const submitCommand: ICommand = {
               points: submissionType.points,
               username: user.username,
               display_name: user.displayName,
+              avatar_url: user.avatarURL() || "none",
             };
             // if the user doesn't exist, create the user
             collection.doc(user.id).set(userData);
