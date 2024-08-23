@@ -75,17 +75,9 @@ const submitCommand: ICommand = {
       // query the database for the user
       const userDoc = await collection.doc(user.id).get();
 
-      // TODO: add a streak feature
-      // whenever you do ANYTHING, the completion_combo goes up by like 0.1 or weighted by the points value?
-      // completion_combo = completion_combo + 0.1
-      // OR:
-      // completion_combo = completion_combo + (0.1 * points_value)
-      // then calculate the total points awarded for this submission
-      // total points = (completion_combo * point_value) + points_value
-
-      // multiply the points by the completion combo
-
       let additionalPoints = submissionType.points;
+
+      // use this to reward players for making more progress
       const currentComboMultiplier = 0.1 * submissionType.points;
 
       // figure out if this is a new user
