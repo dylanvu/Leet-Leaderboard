@@ -92,8 +92,38 @@ const submitCommand: ICommand = {
   },
 };
 
+// help command
+const helpCommandName = "help";
+const helpCommand: ICommand = {
+  name: helpCommandName,
+  data: new SlashCommandBuilder()
+    .setName(helpCommandName)
+    .setDescription("Ask for help"),
+  execute: (interaction) => {
+    interaction.reply(
+      "Type in `/submit` to submit something for points! The deadline is New Year's Day at 7:00 AM PST! Good luck!"
+    );
+  },
+};
+
+// leaderboard command
+const leaderboardCommandName = "leaderboard";
+const leaderboardCommand: ICommand = {
+  name: leaderboardCommandName,
+  data: new SlashCommandBuilder()
+    .setName(leaderboardCommandName)
+    .setDescription("Ask for help"),
+  execute: (interaction) => {
+    interaction.reply("Not implemented yet.");
+    // TODO: create an embed with the leaderboard
+  },
+};
+
+// directory of commands
 const commandDirectory: Record<string, ICommand> = {
   ping: pingCommand,
   submit: submitCommand,
+  help: helpCommand,
+  leaderboard: leaderboardCommand,
 };
 export default commandDirectory;
