@@ -26,7 +26,7 @@ const pingCommand: ICommand = {
 interface ISubmission {
   name: string;
   points: number;
-  value: string;
+  value: string; // value should match the name of the category cuz that's how my code works :P
 }
 const submissionDirectory = [
   { name: "Job Application", points: 1, value: "Job Application" },
@@ -46,7 +46,11 @@ const submissionDirectory = [
     points: 20,
     value: "Side Project",
   },
-  { name: "Offer Secured", points: 100, value: "Offer Secured" },
+  {
+    name: "The Ultimate Goal: Offer Secured",
+    points: 100,
+    value: "The Ultimate Goal: Offer Secured",
+  },
 ];
 const submitCommandName = "submit";
 const submitCommand: ICommand = {
