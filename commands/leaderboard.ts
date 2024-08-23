@@ -36,7 +36,7 @@ const leaderboardCommand: ICommand = {
       leaderboard.map((user, index) => {
         const userEntry: APIEmbedField = {
           name: user.display_name,
-          value: `${user.points.toString()} points`,
+          value: `**Points:**\n${user.points.toString()} points\n**Completion Combo:**\n${user.completion_combo.toString()}x`,
         };
         leaderboardEmbed.addFields(userEntry);
         if (

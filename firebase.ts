@@ -22,4 +22,5 @@ export interface IUser {
   points: number; // points a user has acquired
   username: string; // discord username
   avatar_url: string; // discord avatar url
+  completion_combo: number; // completion combo
 }

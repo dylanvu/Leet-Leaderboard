@@ -72,44 +72,54 @@ const submitCommand: ICommand = {
       // figure out who the user is
       const user = interaction.user;
 
-      // TODO: add a streak feature
-      // get the current time
-      const currentTime = new Date();
+      // query the database for the user
+      const userDoc = await collection.doc(user.id).get();
 
-      // if you submit within 24 hours of your last submission, you get an additional streak bonus
-      // formula: points bonus = (daily_streak * 0.1 * points)
+      // TODO: add a streak feature
+      // whenever you do ANYTHING, the completion_combo goes up by like 0.1 or weighted by the points value?
+      // completion_combo = completion_combo + 0.1
+      // OR:
+      // completion_combo = completion_combo + (0.1 * points_value)
+      // then calculate the total points awarded for this submission
+      // total points = (completion_combo * point_value) + points_value
+
+      // multiply the points by the completion combo
+
+      let additionalPoints = submissionType.points;
+      let additionalCompletionCombo = 0.1 * submissionType.points;
 
       // figure out if this is a new user
-      await collection
-        .doc(user.id)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            // if the user exists, add the points
-            const userDoc = doc.data();
-            const userPoints = userDoc?.points;
-            collection.doc(user.id).update({
-              points: userPoints + submissionType.points,
-            });
-          } else {
-            const userData: IUser = {
-              points: submissionType.points,
-              username: user.username,
-              display_name: user.displayName,
-              avatar_url: user.avatarURL() || "none",
-            };
-            // if the user doesn't exist, create the user
-            collection.doc(user.id).set(userData);
-          }
+      if (userDoc.exists) {
+        const userDocData = userDoc.data() as IUser;
+        // adjust the points by the completion combo
+        additionalPoints = additionalPoints * userDocData.completion_combo;
+        // update the completion combo
+        const newCompletionCombo =
+          userDocData.completion_combo + additionalCompletionCombo;
+        const userPoints = userDocData?.points;
+        collection.doc(user.id).update({
+          points: userPoints + additionalPoints,
+          completion_combo: newCompletionCombo,
         });
+      } else {
+        // new user
+        const userData: IUser = {
+          points: additionalPoints,
+          username: user.username,
+          display_name: user.displayName,
+          avatar_url: user.avatarURL() || "none",
+          completion_combo: additionalCompletionCombo,
+        };
+        // if the user doesn't exist, create the user
+        collection.doc(user.id).set(userData);
+      }
 
       // reply with a confirmation
-      const points = submissionType.points;
       await interaction.reply(
         `**${interaction.options.getString(
           "category"
-        )}** finished! **${points} ${
-          points === 1 ? "point" : "points"
+        )}** finished! **${additionalPoints} ${
+          additionalPoints === 1 ? "point" : "points"
         } have been added.**`
       );
     }
