@@ -2,7 +2,6 @@ import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
   CacheType,
-  SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 
 import pingCommand from "./commands/ping";
@@ -12,7 +11,7 @@ import leaderboardCommand from "./commands/leaderboard";
 
 export interface ICommand {
   name: string;
-  data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+  data: SlashCommandBuilder;
   execute: (interaction: ChatInputCommandInteraction<CacheType>) => void;
 }
 
