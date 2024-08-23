@@ -11,9 +11,9 @@ interface ISubmission {
 const submissionDirectory = [
   { name: "A Job Application", points: 1, value: "A Job Application" },
   {
-    name: "A Side Project Work Session",
+    name: "1 Hour of Side Project Work Session",
     points: 2,
-    value: "A Side Project Work Session",
+    value: "1 Hour of Side Project Work Session",
   },
   {
     name: "Updating Resume/LinkedIn",
@@ -86,7 +86,7 @@ const submitCommand: ICommand = {
       // multiply the points by the completion combo
 
       let additionalPoints = submissionType.points;
-      let additionalCompletionCombo = 0.1 * submissionType.points;
+      const currentComboMultiplier = 0.1 * submissionType.points;
 
       // figure out if this is a new user
       if (userDoc.exists) {
@@ -95,7 +95,7 @@ const submitCommand: ICommand = {
         additionalPoints = additionalPoints * userDocData.completion_combo;
         // update the completion combo
         const newCompletionCombo =
-          userDocData.completion_combo + additionalCompletionCombo;
+          userDocData.completion_combo + currentComboMultiplier;
         const userPoints = userDocData?.points;
         collection.doc(user.id).update({
           points: userPoints + additionalPoints,
@@ -108,7 +108,7 @@ const submitCommand: ICommand = {
           username: user.username,
           display_name: user.displayName,
           avatar_url: user.avatarURL() || "none",
-          completion_combo: additionalCompletionCombo,
+          completion_combo: 1 + currentComboMultiplier,
         };
         // if the user doesn't exist, create the user
         collection.doc(user.id).set(userData);
