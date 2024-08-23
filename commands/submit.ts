@@ -9,22 +9,27 @@ interface ISubmission {
   value: string; // value should match the name of the category cuz that's how my code works :P
 }
 const submissionDirectory = [
-  { name: "Job Application", points: 1, value: "Job Application" },
+  { name: "A Job Application", points: 1, value: "A Job Application" },
   {
-    name: "Side Project Work Session",
+    name: "A Side Project Work Session",
     points: 2,
-    value: "Side Project Work Session",
+    value: "A Side Project Work Session",
   },
-  { name: "Leetcode Question", points: 5, value: "Leetcode Question" },
   {
-    name: "OA/Interview for Company",
+    name: "Updating Resume/LinkedIn",
+    points: 2,
+    value: "Updating Resume/LinkedIn",
+  },
+  { name: "A Leetcode Question", points: 5, value: "A Leetcode Question" },
+  {
+    name: "An OA/Interview for Company",
     points: 10,
-    value: "OA/Interview for Company",
+    value: "An OA/Interview for Company",
   },
   {
-    name: "Side Project",
+    name: "A Side Project",
     points: 20,
-    value: "Side Project",
+    value: "A Side Project",
   },
   {
     name: "The Ultimate Goal: Offer Secured",
