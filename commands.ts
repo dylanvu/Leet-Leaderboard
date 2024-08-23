@@ -57,7 +57,7 @@ const submitCommand: ICommand = {
   name: submitCommandName,
   data: new SlashCommandBuilder()
     .setName(submitCommandName)
-    .setDescription("Submit points for doing stuff")
+    .setDescription("Get points for doing stuff")
     .addStringOption((option) =>
       option
         .setName("category")
@@ -112,7 +112,7 @@ const leaderboardCommand: ICommand = {
   name: leaderboardCommandName,
   data: new SlashCommandBuilder()
     .setName(leaderboardCommandName)
-    .setDescription("Ask for help"),
+    .setDescription("View the leaderboard"),
   execute: (interaction) => {
     interaction.reply("Not implemented yet.");
     // TODO: create an embed with the leaderboard
