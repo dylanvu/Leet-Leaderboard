@@ -1,6 +1,6 @@
 import { ICommand } from "../commands";
 import { SlashCommandBuilder } from "discord.js";
-import { db } from "../firebase";
+import { collection, IUser } from "../firebase";
 
 // command to add points
 interface ISubmission {
@@ -32,6 +32,7 @@ const submissionDirectory = [
     value: "The Ultimate Goal: Offer Secured",
   },
 ];
+
 const submitCommandName = "submit";
 const submitCommand: ICommand = {
   name: submitCommandName,
@@ -58,7 +59,7 @@ const submitCommand: ICommand = {
     );
 
     if (submissionType === undefined) {
-      interaction.reply(
+      await interaction.reply(
         "This is a broken category. Please contact the bot developer."
       );
       return;
@@ -74,8 +75,7 @@ const submitCommand: ICommand = {
       // formula: points bonus = (daily_streak * 0.1 * points)
 
       // figure out if this is a new user
-      await db
-        .collection("leet_leaderboard")
+      await collection
         .doc(user.id)
         .get()
         .then((doc) => {
@@ -83,18 +83,17 @@ const submitCommand: ICommand = {
             // if the user exists, add the points
             const userDoc = doc.data();
             const userPoints = userDoc?.points;
-            db.collection("leet_leaderboard")
-              .doc(user.id)
-              .update({
-                points: userPoints + submissionType.points,
-              });
+            collection.doc(user.id).update({
+              points: userPoints + submissionType.points,
+            });
           } else {
-            // if the user doesn't exist, create the user
-            db.collection("leet_leaderboard").doc(user.id).set({
+            const userData: IUser = {
               points: submissionType.points,
               username: user.username,
               display_name: user.displayName,
-            });
+            };
+            // if the user doesn't exist, create the user
+            collection.doc(user.id).set(userData);
           }
         });
 

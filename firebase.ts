@@ -13,4 +13,12 @@ initializeApp({
 });
 
 // create the firestore database access in the application
-export const db = getFirestore();
+const db = getFirestore();
+export const collection = db.collection("leet_leaderboard");
+
+// a poor man's ORM
+export interface IUser {
+  display_name: string; // discord display name
+  points: number; // points a user has acquired
+  username: string; // discord username
+}
