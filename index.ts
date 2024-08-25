@@ -1,9 +1,18 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { configDotenv } from "dotenv";
 import commandDirectory from "./commands";
+import express from "express";
 
 configDotenv();
 const TOKEN = process.env.TOKEN;
+
+const APP = express();
+const PORT: number = 3000;
+
+APP.get("/", (req: any, res: any) => res.send("App Engine Bot!"));
+APP.listen(PORT, () =>
+  console.log(`Discord bot app listening at http://localhost:${PORT}`)
+);
 
 const client = new Client({
   intents: GatewayIntentBits.Guilds,

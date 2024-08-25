@@ -130,3 +130,7 @@ dist
 .pnp.*
 
 lib/
+
+# ignore the app.yaml since it has sensitive information
+# use the app.yaml.example for reference
+app.yaml
