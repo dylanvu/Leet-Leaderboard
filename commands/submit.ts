@@ -7,7 +7,7 @@ interface ISubmission {
   name: string;
   subcommandName: string;
   points: number;
-  type: "name" | "link";
+  type: "name" | "link" | "description";
   type_description_prompt: string;
   reply_description: string;
 }
@@ -33,7 +33,7 @@ const submissionDirectory: ISubmission[] = [
     name: "Updating Resume/LinkedIn",
     subcommandName: "resume-linkedin",
     points: 2,
-    type: "name",
+    type: "description",
     type_description_prompt: "What did you change?",
     reply_description:
       "**updated your Resume/LinkedIn**. Here's what they did:",
