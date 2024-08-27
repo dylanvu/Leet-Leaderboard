@@ -107,7 +107,7 @@ const submitCommand: ICommand = {
 
       // special case: side project work hours
       let numHoursWorked = 1;
-      if (submissionType.name === "side-project-work-session") {
+      if (submissionType.subcommandName === "side-project-work-session") {
         // check if there is an extra argument for hours
         const hoursWorked = interaction.options.getString("hours");
         // make sure the hours inputted are valid
@@ -162,7 +162,7 @@ const submitCommand: ICommand = {
       let finalReply = `**${interaction.user.displayName}**, you ${submissionType.reply_description} ${replyText}`;
       // special case:
       // if it's side project submission, add the number of hours at the end
-      if (submissionType.name === "side-project-work-session") {
+      if (submissionType.subcommandName === "side-project-work-session") {
         finalReply += ` for ${numHoursWorked} hour`;
         // plurality of hours
         numHoursWorked !== 1 ? (finalReply += "s") : "";
