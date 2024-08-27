@@ -190,7 +190,9 @@ submissionDirectory.map((submission: ISubmission) => {
           .setRequired(true)
       );
     // special case: bulk submit hours
+    console.log(submission.subcommandName);
     if (submission.subcommandName === "side-project-work-session") {
+      console.log("Registering additional hours option for side project");
       subcommand.addStringOption((option) =>
         option
           .setName("hours")
