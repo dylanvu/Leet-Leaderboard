@@ -180,7 +180,7 @@ const submitCommand: ICommand = {
 // iterate through the submission directory and add subcommands that prompt for a string/link
 submissionDirectory.map((submission: ISubmission) => {
   submitCommand.data.addSubcommand((subcommand) => {
-    subcommand
+    let sub = subcommand
       .setName(submission.subcommandName)
       .setDescription(`Submit ${submission.name}`)
       .addStringOption((option) =>
@@ -193,7 +193,7 @@ submissionDirectory.map((submission: ISubmission) => {
     console.log(submission.subcommandName);
     if (submission.subcommandName === "side-project-work-session") {
       console.log("Registering additional hours option for side project");
-      subcommand.addStringOption((option) =>
+      sub.addStringOption((option) =>
         option
           .setName("hours")
           .setDescription(
@@ -202,7 +202,7 @@ submissionDirectory.map((submission: ISubmission) => {
           .setRequired(false)
       );
     }
-    return subcommand;
+    return sub;
   });
 });
 
