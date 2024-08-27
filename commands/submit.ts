@@ -106,21 +106,16 @@ const submitCommand: ICommand = {
       let currentComboMultiplier = 0.1 * submissionType.points;
 
       // special case: side project work hours
-      let numHoursWorked = 1;
+      let hoursWorked: number | null = 1;
       if (submissionType.subcommandName === "side-project-work-session") {
         // check if there is an extra argument for hours
-        const hoursWorked = interaction.options.getString("hours");
+        hoursWorked = interaction.options.getInteger("hours");
         // make sure the hours inputted are valid
-        if (
-          hoursWorked &&
-          hoursWorked.length > 0 &&
-          !isNaN(parseInt(hoursWorked))
-        ) {
-          numHoursWorked = parseInt(hoursWorked);
+        if (hoursWorked !== null) {
           // multiply additional points by number of hours worked
-          additionalPoints = additionalPoints * numHoursWorked;
+          additionalPoints = additionalPoints * hoursWorked;
           // increment currentComboMultiplier by number of hours worked
-          currentComboMultiplier = currentComboMultiplier * numHoursWorked;
+          currentComboMultiplier = currentComboMultiplier * hoursWorked;
         }
       }
       if (userDoc.exists) {
@@ -163,9 +158,9 @@ const submitCommand: ICommand = {
       // special case:
       // if it's side project submission, add the number of hours at the end
       if (submissionType.subcommandName === "side-project-work-session") {
-        finalReply += ` for ${numHoursWorked} hour`;
+        finalReply += ` for ${hoursWorked} hour`;
         // plurality of hours
-        numHoursWorked !== 1 ? (finalReply += "s") : "";
+        hoursWorked !== 1 ? (finalReply += "s") : "";
       }
       // reply with a confirmation
       await interaction.reply(
@@ -193,7 +188,7 @@ submissionDirectory.map((submission: ISubmission) => {
     console.log(submission.subcommandName);
     if (submission.subcommandName === "side-project-work-session") {
       console.log("Registering additional hours option for side project");
-      sub.addStringOption((option) =>
+      sub.addIntegerOption((option) =>
         option
           .setName("hours")
           .setDescription(
