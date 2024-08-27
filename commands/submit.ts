@@ -179,27 +179,27 @@ const submitCommand: ICommand = {
 
 // iterate through the submission directory and add subcommands that prompt for a string/link
 submissionDirectory.map((submission: ISubmission) => {
-  submitCommand.data.addSubcommand((subcommand) =>
+  submitCommand.data.addSubcommand((subcommand) => {
     subcommand
       .setName(submission.subcommandName)
       .setDescription(`Submit ${submission.name}`)
-      .addStringOption((option) => {
+      .addStringOption((option) =>
         option
           .setName(submission.type)
           .setDescription(submission.type_description_prompt)
-          .setRequired(true);
-
-        // special case: bulk submit hours
-        if (submission.subcommandName === "side-project-work-session") {
-          option
-            .setName("hours")
-            .setDescription("How many hours did you work on this?")
-            .setRequired(false);
-        }
-
-        return option;
-      })
-  );
+          .setRequired(true)
+      );
+    // special case: bulk submit hours
+    if (submission.subcommandName === "side-project-work-session") {
+      subcommand.addStringOption((option) =>
+        option
+          .setName("hours")
+          .setDescription("How many hours did you work on this?")
+          .setRequired(false)
+      );
+    }
+    return subcommand;
+  });
 });
 
 export default submitCommand;
