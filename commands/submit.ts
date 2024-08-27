@@ -22,7 +22,7 @@ const submissionDirectory: ISubmission[] = [
       "finished a **Job Application**. Here's where they applied to:",
   },
   {
-    name: "1 Hour of Side Project Work Session",
+    name: "A Side Project Work Session",
     subcommandName: "side-project-work-session",
     points: 2,
     type: "name",
@@ -194,7 +194,9 @@ submissionDirectory.map((submission: ISubmission) => {
       subcommand.addStringOption((option) =>
         option
           .setName("hours")
-          .setDescription("How many hours did you work on this?")
+          .setDescription(
+            "How many hours did you work on this? Default/blank is 1 hour."
+          )
           .setRequired(false)
       );
     }
