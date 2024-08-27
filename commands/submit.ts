@@ -103,10 +103,28 @@ const submitCommand: ICommand = {
       let additionalPoints = submissionType.points;
 
       // use this to reward players for making more progress
-      const currentComboMultiplier = 0.1 * submissionType.points;
+      let currentComboMultiplier = 0.1 * submissionType.points;
 
-      // figure out if this is a new user
+      // special case: side project work hours
+      let numHoursWorked = 1;
+      if (submissionType.name === "side-project-work-session") {
+        // check if there is an extra argument for hours
+        const hoursWorked = interaction.options.getString("hours");
+        // make sure the hours inputted are valid
+        if (
+          hoursWorked &&
+          hoursWorked.length > 0 &&
+          !isNaN(parseInt(hoursWorked))
+        ) {
+          numHoursWorked = parseInt(hoursWorked);
+          // multiply additional points by number of hours worked
+          additionalPoints = additionalPoints * numHoursWorked;
+          // increment currentComboMultiplier by number of hours worked
+          currentComboMultiplier = currentComboMultiplier * numHoursWorked;
+        }
+      }
       if (userDoc.exists) {
+        // figure out if this is a new user
         const userDocData = userDoc.data() as IUser;
         // adjust the points by the completion combo
         additionalPoints = additionalPoints * userDocData.completion_combo;
@@ -141,11 +159,17 @@ const submitCommand: ICommand = {
           ? "<" + userSubmissionDescription + ">"
           : `**${userSubmissionDescription}**`;
 
+      let finalReply = `**${interaction.user.displayName}**, you ${submissionType.reply_description} ${replyText}`;
+      // special case:
+      // if it's side project submission, add the number of hours at the end
+      if (submissionType.name === "side-project-work-session") {
+        finalReply += ` for ${numHoursWorked} hour`;
+        // plurality of hours
+        numHoursWorked !== 1 ? (finalReply += "s") : "";
+      }
       // reply with a confirmation
       await interaction.reply(
-        `**${interaction.user.displayName}**, you ${
-          submissionType.reply_description
-        } ${replyText}\n**${additionalPoints.toFixed(2)} ${
+        `${finalReply}\n**${additionalPoints.toFixed(2)} ${
           additionalPoints === 1 ? "point" : "points"
         } have been added.**`
       );
@@ -159,12 +183,22 @@ submissionDirectory.map((submission: ISubmission) => {
     subcommand
       .setName(submission.subcommandName)
       .setDescription(`Submit ${submission.name}`)
-      .addStringOption((option) =>
+      .addStringOption((option) => {
         option
           .setName(submission.type)
           .setDescription(submission.type_description_prompt)
-          .setRequired(true)
-      )
+          .setRequired(true);
+
+        // special case: bulk submit hours
+        if (submission.subcommandName === "side-project-work-session") {
+          option
+            .setName("hours")
+            .setDescription("How many hours did you work on this?")
+            .setRequired(false);
+        }
+
+        return option;
+      })
   );
 });
 
