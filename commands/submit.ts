@@ -1,5 +1,5 @@
 import { ICommand } from "../commands";
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import { collection, IUser } from "../firebase";
 
 // command to add points
@@ -112,10 +112,13 @@ const submitCommand: ICommand = {
         hoursWorked = interaction.options.getInteger("hours");
         // make sure the hours inputted are valid
         if (hoursWorked !== null) {
-          // multiply additional points by number of hours worked
-          additionalPoints = additionalPoints * hoursWorked;
-          // increment currentComboMultiplier by number of hours worked
-          currentComboMultiplier = currentComboMultiplier * hoursWorked;
+          // use a for loop to accumulate the combo
+          for (let i = 0; i < hoursWorked; i++) {
+            // multiply additional points by new combo multiplier
+            additionalPoints = currentComboMultiplier * additionalPoints;
+            // increment currentComboMultiplier by 1 more hour
+            currentComboMultiplier = 0.1 * submissionType.points;
+          }
         }
       }
       if (userDoc.exists) {
