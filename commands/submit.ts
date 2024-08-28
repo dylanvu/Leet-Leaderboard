@@ -100,10 +100,29 @@ const submitCommand: ICommand = {
       // query the database for the user
       const userDoc = await collection.doc(user.id).get();
 
-      let additionalPoints = submissionType.points;
+      let userData: IUser;
+      if (userDoc.exists) {
+        // figure out if this is a new user
+        userData = userDoc.data() as IUser;
+      } else {
+        // create a new user data with defaults
+        userData = {
+          points: 0,
+          username: user.username,
+          display_name: user.displayName,
+          avatar_url: user.avatarURL() || "none",
+          completion_combo: 1,
+        };
+      }
+      // now, perform the point calculations
+      // first, calculate the new amount of points using the existing combo
+      let additionalPoints = submissionType.points * userData.completion_combo;
 
-      // use this to reward players for making more progress
-      let currentComboMultiplier = 0.1 * submissionType.points;
+      // now, increase the combo multiplier for the next submission
+      // the combo multipler is used to reward players for making more progress
+      // big number go bigger
+      let currentComboMultiplier =
+        0.1 * submissionType.points + userData.completion_combo;
 
       // special case: side project work hours
       let hoursWorked: number | null = 1;
@@ -117,33 +136,19 @@ const submitCommand: ICommand = {
             // multiply additional points by new combo multiplier
             additionalPoints = currentComboMultiplier * additionalPoints;
             // increment currentComboMultiplier by 1 more hour
-            currentComboMultiplier = 0.1 * submissionType.points;
+            currentComboMultiplier =
+              0.1 * submissionType.points + currentComboMultiplier;
           }
         }
       }
+
+      // update the modified user data
       if (userDoc.exists) {
-        // figure out if this is a new user
-        const userDocData = userDoc.data() as IUser;
-        // adjust the points by the completion combo
-        additionalPoints = additionalPoints * userDocData.completion_combo;
-        // update the completion combo
-        const newCompletionCombo =
-          userDocData.completion_combo + currentComboMultiplier;
-        const userPoints = userDocData?.points;
         collection.doc(user.id).update({
-          points: userPoints + additionalPoints,
-          completion_combo: newCompletionCombo,
+          points: userData.points + additionalPoints,
+          completion_combo: currentComboMultiplier,
         });
       } else {
-        // new user
-        const userData: IUser = {
-          points: additionalPoints,
-          username: user.username,
-          display_name: user.displayName,
-          avatar_url: user.avatarURL() || "none",
-          completion_combo: 1 + currentComboMultiplier,
-        };
-        // if the user doesn't exist, create the user
         collection.doc(user.id).set(userData);
       }
 
