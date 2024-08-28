@@ -116,10 +116,10 @@ const submitCommand: ICommand = {
       }
       // now, perform the point calculations
       // first, calculate the new amount of points using the existing combo
+      // the combo multipler is used to reward players for making more progress
       let additionalPoints = submissionType.points * userData.completion_combo;
 
       // now, increase the combo multiplier for the next submission
-      // the combo multipler is used to reward players for making more progress
       // big number go bigger
       let currentComboMultiplier =
         0.1 * submissionType.points + userData.completion_combo;
@@ -133,9 +133,10 @@ const submitCommand: ICommand = {
         if (hoursWorked !== null) {
           // use a for loop to accumulate the combo
           for (let i = 0; i < hoursWorked; i++) {
-            // multiply additional points by new combo multiplier
-            additionalPoints = currentComboMultiplier * additionalPoints;
-            // increment currentComboMultiplier by 1 more hour
+            // multiply points by new combo multiplier, and add to running total
+            additionalPoints =
+              additionalPoints + currentComboMultiplier * submissionType.points;
+            // increment currentComboMultiplier by one more step
             currentComboMultiplier =
               0.1 * submissionType.points + currentComboMultiplier;
           }
