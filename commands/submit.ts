@@ -132,13 +132,11 @@ const submitCommand: ICommand = {
         // make sure the hours inputted are valid
         if (hoursWorked !== null) {
           // use a for loop to accumulate the combo
-          for (let i = 0; i < hoursWorked; i++) {
+          for (let i = 0; i < hoursWorked - 1; i++) {
             // multiply points by new combo multiplier, and add to running total
-            additionalPoints =
-              additionalPoints + currentComboMultiplier * submissionType.points;
+            additionalPoints += currentComboMultiplier * submissionType.points;
             // increment currentComboMultiplier by one more step
-            currentComboMultiplier =
-              0.1 * submissionType.points + currentComboMultiplier;
+            currentComboMultiplier += 0.1 * submissionType.points;
           }
         }
       }
@@ -150,7 +148,7 @@ const submitCommand: ICommand = {
           completion_combo: currentComboMultiplier,
         });
       } else {
-        userData.points += additionalPoints;
+        userData.points = additionalPoints;
         userData.completion_combo = currentComboMultiplier;
         collection.doc(user.id).set(userData);
       }
