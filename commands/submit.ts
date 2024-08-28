@@ -11,7 +11,7 @@ interface ISubmission {
   type_description_prompt: string;
   reply_description: string;
 }
-const submissionDirectory: ISubmission[] = [
+export const submissionDirectory: ISubmission[] = [
   {
     name: "A Job Application",
     subcommandName: "job-application",
