@@ -130,9 +130,9 @@ const submitCommand: ICommand = {
         // check if there is an extra argument for hours
         hoursWorked = interaction.options.getInteger("hours");
         // make sure the hours inputted are valid
-        if (hoursWorked !== null) {
+        if (hoursWorked !== null && hoursWorked > 1) {
           // use a for loop to accumulate the combo
-          for (let i = 0; i < hoursWorked - 1; i++) {
+          for (let i = 1; i < hoursWorked; i++) {
             // multiply points by new combo multiplier, and add to running total
             additionalPoints += currentComboMultiplier * submissionType.points;
             // increment currentComboMultiplier by one more step
