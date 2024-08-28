@@ -149,6 +149,8 @@ const submitCommand: ICommand = {
           completion_combo: currentComboMultiplier,
         });
       } else {
+        userData.points += additionalPoints;
+        userData.completion_combo = currentComboMultiplier;
         collection.doc(user.id).set(userData);
       }
 
