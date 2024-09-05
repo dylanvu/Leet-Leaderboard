@@ -56,6 +56,14 @@ export const submissionDirectory: ISubmission[] = [
       "completed **An OA/Interview for a Company**. They interviewed with:",
   },
   {
+    name: "A Hackathon",
+    subcommandName: "hackathon",
+    points: 10,
+    type: "link",
+    type_description_prompt: "Link to Devpost/Submission",
+    reply_description: "completed **A Hackathon**. Here's their project:",
+  },
+  {
     name: "A Side Project",
     subcommandName: "side-project-completion",
     points: 20,
